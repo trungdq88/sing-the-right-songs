@@ -1,5 +1,3 @@
-package com.dqt.apps.midireader;
-
 import com.google.gson.Gson;
 
 import java.io.File;

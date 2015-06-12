@@ -1,0 +1,73 @@
+<script src="jquery-1.11.3.min.js"></script>
+<script>
+    var SONGS;
+    function log(s) {
+        $('#lblMessage').append($("<p>" + s + "</p>"));
+    }
+    $(document).ready(function () {
+        log("Reading JSON file...");
+        $.ajax({
+            dataType: "json",
+            url: "songs.json",
+            async: false,
+            success: function(data) {
+                SONGS = data;
+            }
+        });
+        log(Object.keys(SONGS).length + " songs loaded!");
+    });
+    function search() {
+        var from = +$('#vocalFrom').val();
+        var to = +$('#vocalTo').val();
+
+        // Find the songs
+        var goodSongs = [];
+        var keys = Object.keys(SONGS);
+        for (var iKeys = 0; iKeys < keys.length; iKeys++) {
+            var maxDistance = 0;
+            var thisSongIsGood = 0;
+            var thisSongIsNotGood = 0;
+            var songNotes = SONGS[iKeys];
+            for (var iNotes = 0; iNotes < songNotes.length; iNotes++) {
+                var note = songNotes[iNotes];
+                if (note >= from && note <= to) {
+                    thisSongIsGood++;
+                } else {
+                    thisSongIsNotGood++;
+                    if (Math.abs(note - from) > maxDistance) {
+                        maxDistance = Math.abs(note - from);
+                    }
+                    if (Math.abs(note - to) > maxDistance) {
+                        maxDistance = Math.abs(note - to);
+                    }
+                }
+            }
+            goodSongs.push({
+                songId: iKeys,
+                goodness: 1 - thisSongIsNotGood / songNotes.length,
+                maxDistance: maxDistance
+            });
+        }
+
+        // Sort the result, sort by goodness ratio (higher is better and listed first)
+        goodSongs.sort(function (a, b) {
+            return a.goodness - b.goodness
+        });
+
+        // Show result
+        for (var i = 0; i < goodSongs.length; i++) {
+            $('#result').append($('<li>' + goodSongs.songId + " : "
+            + goodSongs.goodness + " (" + goodSongs.maxDistance + ")" + '</li>'))
+        }
+    }
+</script>
+
+<div id="lblMessage"></div>
+
+<div>
+    <h1>What is your vocal range?</h1>
+    <input type="text" id="vocalFrom"/> to
+    <input type="text" id="vocalTo"/>
+    <input type="button" onclick="search()" value="Find me my songs!"/>
+</div>
+<div id="result"></div>

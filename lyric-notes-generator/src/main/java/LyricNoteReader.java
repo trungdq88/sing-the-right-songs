@@ -1,4 +1,3 @@
-package com.dqt.apps.midireader;
 import org.jfugue.midi.MidiParser;
 import org.jfugue.parser.ParserListenerAdapter;
 import org.jfugue.player.Player;
