@@ -36,7 +36,8 @@ public class LyricNoteReader {
         } else {
             return null;
         }
-
+        // System.out.println(listener.lyricNotes);
+        // System.out.println(listener.notes);
         return listener.notes;
     }
 
