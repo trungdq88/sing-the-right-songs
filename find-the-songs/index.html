@@ -1,6 +1,7 @@
 <script src="jquery-1.11.3.min.js"></script>
 <script>
     var SONGS;
+    var TITLES;
     function log(s) {
         $('#lblMessage').append($("<p>" + s + "</p>"));
     }
@@ -16,12 +17,23 @@
                     SONGS = data;
                 }
             });
+            $.ajax({
+                dataType: "json",
+                url: "song-title.json",
+                async: false,
+                success: function(data) {
+                    TITLES = data;
+                }
+            });
+
             log(Object.keys(SONGS).length + " songs loaded!");
 
             $('#content').show();
         }, 1000);
     });
     function search() {
+        $('#result').html('');
+
         var from = +$('#vocalFrom').val();
         var to = +$('#vocalTo').val();
 
@@ -41,11 +53,12 @@
                     thisSongIsGood++;
                 } else {
                     thisSongIsNotGood++;
-                    if (Math.abs(note - from) > maxDistance) {
-                        maxDistance = Math.abs(note - from);
-                    }
-                    if (Math.abs(note - to) > maxDistance) {
-                        maxDistance = Math.abs(note - to);
+                    if (Math.abs(note - from) > maxDistance || Math.abs(note - to) > maxDistance) {
+                        if (note < from) {
+                            maxDistance = Math.abs(note - from);
+                        } else if (note > to) {
+                            maxDistance = Math.abs(note - to);
+                        }
                     }
                 }
             }
@@ -64,8 +77,9 @@
         // Show result
         for (var i = 0; i < goodSongs.length; i++) {
             var song = goodSongs[i];
-            $('#result').append($('<li>' + song.songId + " : "
-            + song.goodness + " (" + song.maxDistance + ")" + '</li>'))
+            var title = TITLES[song.songId];
+            $('#result').append($('<tr><td>' + title + "</td><td>" + song.songId + "</td><td>"
+            + (Math.round(song.goodness * 100) / 100) + " (" + song.maxDistance + ")" + '</td></tr>'))
         }
     }
 </script>
@@ -182,4 +196,8 @@
 </div>
 <br/>
 <br/>
-<div id="result"></div>
+<div>
+    <table id="result">
+
+    </table>
+</div>
