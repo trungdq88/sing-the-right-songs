@@ -1,0 +1,20 @@
+{
+  "name": "find-the-songs",
+  "version": "0.0.0",
+  "homepage": "https://github.com/trungdq88/sing-the-right-songs",
+  "authors": [
+    "Dinh Quang Trung <trungdq88@gmail.com>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5"
+  }
+}

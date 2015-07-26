@@ -1,203 +1,174 @@
-<script src="jquery-1.11.3.min.js"></script>
-<script>
-    var SONGS;
-    var TITLES;
-    function log(s) {
-        $('#lblMessage').append($("<p>" + s + "</p>"));
-    }
-    $(document).ready(function () {
-        log("Loading...");
-        setTimeout(function () {
-            log("Reading JSON file...");
-            $.ajax({
-                dataType: "json",
-                url: "songs.json",
-                async: false,
-                success: function(data) {
-                    SONGS = data;
-                }
-            });
-            $.ajax({
-                dataType: "json",
-                url: "song-title.json",
-                async: false,
-                success: function(data) {
-                    TITLES = data;
-                }
-            });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bootstrap 101 Template</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="jumbotron-narrow.css">
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
 
-            log(Object.keys(SONGS).length + " songs loaded!");
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="active"><a href="#">Home</a></li>
+                <li role="presentation"><a href="https://github.com/trungdq88/sing-the-right-songs">Github</a></li>
+            </ul>
+        </nav>
+        <h3 class="text-muted">Sing the right songs</h3>
+    </div>
 
-            $('#content').show();
-        }, 1000);
-    });
-    function search() {
-        $('#result').html('');
+    <div class="jumbotron">
+        <h2 id="loading">Loading...</h2>
 
-        var from = +$('#vocalFrom').val();
-        var to = +$('#vocalTo').val();
+        <div id="content" style="display: none">
+            <h2>What is your vocal range?</h2>
 
-        // Find the songs
-        var goodSongs = [];
-        var keys = Object.keys(SONGS);
-        for (var iKeys = 0; iKeys < keys.length; iKeys++) {
-            var maxDistance = 0;
-            var thisSongIsGood = 0;
-            var thisSongIsNotGood = 0;
-            var songId = keys[iKeys];
-            var songNotes = SONGS[songId];
-            for (var iNotes = 0; iNotes < songNotes.length; iNotes++) {
-                var note = songNotes[iNotes];
-                if (note == 0) continue; // Ignore the ending note because it is always 0
-                if (note >= from && note <= to) {
-                    thisSongIsGood++;
-                } else {
-                    thisSongIsNotGood++;
-                    if (Math.abs(note - from) > maxDistance || Math.abs(note - to) > maxDistance) {
-                        if (note < from) {
-                            maxDistance = Math.abs(note - from);
-                        } else if (note > to) {
-                            maxDistance = Math.abs(note - to);
-                        }
-                    }
-                }
-            }
-            goodSongs.push({
-                songId: songId,
-                goodness: 1 - thisSongIsNotGood / songNotes.length,
-                maxDistance: maxDistance
-            });
-        }
+            <p class="lead">
+                <a href="https://www.youtube.com/watch?v=9IejHKpfHso" target="_blank">
+                    Find your vocal range in 1 minute
+                </a>
+            </p>
 
-        // Sort the result, sort by goodness ratio (higher is better and listed first)
-        goodSongs.sort(function (a, b) {
-            return b.goodness - a.goodness
-        });
+            <p>
+                <select id="vocalFrom">
+                    <option value="36">C2</option>
+                    <option value="37">C#2</option>
+                    <option value="38">D2</option>
+                    <option value="39">D#2</option>
+                    <option value="40">E2</option>
+                    <option value="41">F2</option>
+                    <option value="42">F#2</option>
+                    <option value="43">G2</option>
+                    <option value="44">G#2</option>
+                    <option value="45">A2</option>
+                    <option value="46">A#2</option>
+                    <option value="47">B2</option>
+                    <option value="48">C3</option>
+                    <option value="49">C#3</option>
+                    <option value="50">D3</option>
+                    <option value="51">D#3</option>
+                    <option value="52">E3</option>
+                    <option value="53">F3</option>
+                    <option value="54">F#3</option>
+                    <option value="55" selected>G3</option>
+                    <option value="56">G#3</option>
+                    <option value="57">A3</option>
+                    <option value="58">A#3</option>
+                    <option value="59">B3</option>
+                    <option value="60">C4</option>
+                    <option value="61">C#4</option>
+                    <option value="62">D4</option>
+                    <option value="63">D#4</option>
+                    <option value="64">E4</option>
+                    <option value="65">F4</option>
+                    <option value="66">F#4</option>
+                    <option value="67">G4</option>
+                    <option value="68">G#4</option>
+                    <option value="69">A4</option>
+                    <option value="70">A#4</option>
+                    <option value="71">B4</option>
+                    <option value="72">C5</option>
+                    <option value="73">C#5</option>
+                    <option value="74">D5</option>
+                    <option value="75">D#5</option>
+                    <option value="76">E5</option>
+                    <option value="77">F5</option>
+                    <option value="78">F#5</option>
+                    <option value="79">G5</option>
+                    <option value="80">G#5</option>
+                    <option value="81">A5</option>
+                    <option value="82">A#5</option>
+                    <option value="83">B5</option>
+                </select> to
+                <select id="vocalTo">
+                    <option value="48">C3</option>
+                    <option value="49">C#3</option>
+                    <option value="50">D3</option>
+                    <option value="51">D#3</option>
+                    <option value="52">E3</option>
+                    <option value="53">F3</option>
+                    <option value="54">F#3</option>
+                    <option value="55">G3</option>
+                    <option value="56">G#3</option>
+                    <option value="57">A3</option>
+                    <option value="58">A#3</option>
+                    <option value="59">B3</option>
+                    <option value="60">C4</option>
+                    <option value="61">C#4</option>
+                    <option value="62">D4</option>
+                    <option value="63">D#4</option>
+                    <option value="64">E4</option>
+                    <option value="65">F4</option>
+                    <option value="66">F#4</option>
+                    <option value="67">G4</option>
+                    <option value="68">G#4</option>
+                    <option value="69">A4</option>
+                    <option value="70">A#4</option>
+                    <option value="71">B4</option>
+                    <option value="72">C5</option>
+                    <option value="73">C#5</option>
+                    <option value="74">D5</option>
+                    <option value="75">D#5</option>
+                    <option value="76">E5</option>
+                    <option value="77">F5</option>
+                    <option value="78">F#5</option>
+                    <option value="79" selected>G5</option>
+                    <option value="80">G#5</option>
+                    <option value="81">A5</option>
+                    <option value="82">A#5</option>
+                    <option value="83">B5</option>
+                    <option value="84">C6</option>
+                    <option value="85">C#6</option>
+                    <option value="86">D6</option>
+                    <option value="87">D#6</option>
+                    <option value="88">E6</option>
+                    <option value="89">F6</option>
+                    <option value="90">F#6</option>
+                    <option value="91">G6</option>
+                    <option value="92">G#6</option>
+                    <option value="93">A6</option>
+                    <option value="94">A#6</option>
+                    <option value="95">B6</option>
+                </select>
+            </p>
+            <p>
+                <input class="btn btn-lg btn-success" type="button" onclick="search()" value="Find me my songs!"/>
+            </p>
+        </div>
+    </div>
 
-        // Show result
-        for (var i = 0; i < goodSongs.length; i++) {
-            var song = goodSongs[i];
-            var title = TITLES[song.songId];
-            $('#result').append($('<tr><td>' + title + "</td><td>" + song.songId + "</td><td>"
-            + (Math.round(song.goodness * 100) / 100) + " (" + song.maxDistance + ")" + '</td></tr>'))
-        }
-    }
-</script>
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h4>Bellow are the songs you can sing:</h4>
 
-<div id="lblMessage"></div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Song title</th>
+                    <th>Karaoke code</th>
+                    <th>Match percentage</th>
+                    <th>Highest distance note</th>
+                </tr>
+                </thead>
+                <tbody id="result">
 
-<div id="content" style="display: none">
-    <h1>What is your vocal range?</h1>
-    <a href="https://www.youtube.com/watch?v=9IejHKpfHso">Find your vocal range in 1 minute</a>
-    <br/>
-    <br/>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <select id="vocalFrom">
-        <option value="36">C2</option>
-        <option value="37">C#2</option>
-        <option value="38">D2</option>
-        <option value="39">D#2</option>
-        <option value="40">E2</option>
-        <option value="41">F2</option>
-        <option value="42">F#2</option>
-        <option value="43">G2</option>
-        <option value="44">G#2</option>
-        <option value="45">A2</option>
-        <option value="46">A#2</option>
-        <option value="47">B2</option>
-        <option value="48">C3</option>
-        <option value="49">C#3</option>
-        <option value="50">D3</option>
-        <option value="51">D#3</option>
-        <option value="52">E3</option>
-        <option value="53">F3</option>
-        <option value="54">F#3</option>
-        <option value="55" selected>G3</option>
-        <option value="56">G#3</option>
-        <option value="57">A3</option>
-        <option value="58">A#3</option>
-        <option value="59">B3</option>
-        <option value="60">C4</option>
-        <option value="61">C#4</option>
-        <option value="62">D4</option>
-        <option value="63">D#4</option>
-        <option value="64">E4</option>
-        <option value="65">F4</option>
-        <option value="66">F#4</option>
-        <option value="67">G4</option>
-        <option value="68">G#4</option>
-        <option value="69">A4</option>
-        <option value="70">A#4</option>
-        <option value="71">B4</option>
-        <option value="72">C5</option>
-        <option value="73">C#5</option>
-        <option value="74">D5</option>
-        <option value="75">D#5</option>
-        <option value="76">E5</option>
-        <option value="77">F5</option>
-        <option value="78">F#5</option>
-        <option value="79">G5</option>
-        <option value="80">G#5</option>
-        <option value="81">A5</option>
-        <option value="82">A#5</option>
-        <option value="83">B5</option>
-    </select> to
-    <select id="vocalTo">
-        <option value="48">C3</option>
-        <option value="49">C#3</option>
-        <option value="50">D3</option>
-        <option value="51">D#3</option>
-        <option value="52">E3</option>
-        <option value="53">F3</option>
-        <option value="54">F#3</option>
-        <option value="55">G3</option>
-        <option value="56">G#3</option>
-        <option value="57">A3</option>
-        <option value="58">A#3</option>
-        <option value="59">B3</option>
-        <option value="60">C4</option>
-        <option value="61">C#4</option>
-        <option value="62">D4</option>
-        <option value="63">D#4</option>
-        <option value="64">E4</option>
-        <option value="65">F4</option>
-        <option value="66">F#4</option>
-        <option value="67">G4</option>
-        <option value="68">G#4</option>
-        <option value="69">A4</option>
-        <option value="70">A#4</option>
-        <option value="71">B4</option>
-        <option value="72">C5</option>
-        <option value="73">C#5</option>
-        <option value="74">D5</option>
-        <option value="75">D#5</option>
-        <option value="76">E5</option>
-        <option value="77">F5</option>
-        <option value="78">F#5</option>
-        <option value="79" selected>G5</option>
-        <option value="80">G#5</option>
-        <option value="81">A5</option>
-        <option value="82">A#5</option>
-        <option value="83">B5</option>
-        <option value="84">C6</option>
-        <option value="85">C#6</option>
-        <option value="86">D6</option>
-        <option value="87">D#6</option>
-        <option value="88">E6</option>
-        <option value="89">F6</option>
-        <option value="90">F#6</option>
-        <option value="91">G6</option>
-        <option value="92">G#6</option>
-        <option value="93">A6</option>
-        <option value="94">A#6</option>
-        <option value="95">B6</option>
-    </select>
-    <input type="button" onclick="search()" value="Find me my songs!"/>
+    <footer class="footer">
+        <p>&copy; Đinh Quang Trung</p>
+    </footer>
+
 </div>
-<br/>
-<br/>
-<div>
-    <table id="result">
-
-    </table>
-</div>
+<!-- /container -->
+</html>
